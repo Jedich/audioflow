@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "next": "^15.0.3",
+    "react-h5-audio-player": "^3.9.3"
+  }
+}

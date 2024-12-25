@@ -1,0 +1,198 @@
+# Golang specific
+bin/
+obj/
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.log
+*.db
+
+# Vendor directory
+vendor/
+
+# Dependency directories (remove the comment below if you use Go modules)
+# /vendor/
+
+# Golang binary
+main
+
+# Golang build and test files
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.log
+*.db
+
+# Go workspace file
+go.work
+
+# IntelliJ IDEA
+.idea/
+
+# GoLand IDE
+.goland/
+
+# VSCode
+.vscode/
+
+# React specific
+node_modules/
+build/
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules/
+
+# Production
+build/
+dist/
+
+# Misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Parcel-bundler cache (https://parceljs.org/)
+.cache/
+
+# Next.js
+.next/
+out/
+
+# Nuxt.js
+.nuxt/
+dist/
+
+# Gatsby files
+.cache/
+public/
+
+# Sapper
+__sapper__/
+static/
+
+# Expo
+web-build/
+.expo/
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Misc
+.DS_Store
+*.pem
+*.key
+*.crt
+
+# Environment variable files
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Parcel cache
+.cache
+
+# Next.js build output
+.next
+out
+
+# Build output
+build
+dist
+
+# Storybook files
+out
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# Local history for JetBrains
+.local-history/
+
+songs/
+
+*.mp3
+
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+/.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Pytest
+.pytest_cache/
+
+# IDE/editor folders
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Python environment files
+Pipfile.lock
+Pipfile
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+
+# Database
+*.sqlite3
+*.db
+
+# Flask
+instance/
+
+# Django
+*.log
+local_settings.py
