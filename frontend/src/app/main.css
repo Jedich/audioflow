@@ -1,0 +1,158 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #181a1f;
+    color: white;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: rgba(17, 24, 39, 1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+  
+  .navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #7C3AED;
+  }
+  
+  .navbar a {
+    text-decoration: none;
+    color: #ffffff;
+    margin-right: 20px;
+    font-size: 16px;
+    transition: color 0.3s;
+  }
+  
+  .navbar a:hover {
+    color: #7C3AED;
+  }
+  
+  .navbar button {
+    background-color: #7C3AED;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .navbar button:hover {
+    background-color: #9F7AEA;
+  }
+  
+  .sidebar {
+    width: 30vh;
+    background-color: rgba(17, 24, 39, 1);
+    height: 100vh;
+    position: fixed;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .sidebar h2 {
+    color: #7C3AED;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+  }
+  
+  .sidebar li {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s;
+    line-height: 3;
+  }
+  
+  .sidebar li:hover {
+    color: #8e3bee;
+  }
+  
+  .sidebar button {
+    background-color: #7C3AED;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .sidebar button:hover {
+    background-color: #9F7AEA;
+    transform: scale(1.05);
+  }
+  
+  .main-content {
+    margin-top: 80px;
+    margin-left: 280px;
+    padding: 30px;
+    padding-left: 80px;
+    background-color: rgb(10, 18, 28);
+    min-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 140%;
+  }
+  
+  .song-card {
+    background-color: #2e3b47;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .song-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+  
+  .song-card h3 {
+    font-size: 18px;
+    color: white;
+  }
+  
+  .song-card p {
+    font-size: 14px;
+    color: #b0b0b0;
+  }
+  
+  .song-card button {
+    background-color: #7C3AED;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .song-card button:hover {
+    background-color: #9F7AEA;
+    transform: scale(1.05);
+  }
+  

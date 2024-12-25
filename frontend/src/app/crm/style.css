@@ -1,0 +1,66 @@
+:root {
+    --bg-dark: #181a1f;
+    --bg-sidebar: #1F2128;
+    --bg-content: #121212;
+    --bg-card: #2e3b47;
+    --bg-input: #252525;
+    --bg-hover: #333;
+    --text-light: #b0b0b0;
+    --text-purple: #7C3AED;
+    --text-green: #28a745;
+    --text-red: #d9534f;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .bg-dark-bg {
+    background-color: var(--bg-dark);
+  }
+  
+  .bg-dark-sidebar {
+    background-color: var(--bg-sidebar);
+  }
+  
+  .bg-dark-content {
+    background-color: var(--bg-content);
+  }
+  
+  .bg-dark-card {
+    background-color: var(--bg-card);
+  }
+  
+  .bg-dark-input {
+    background-color: var(--bg-input);
+  }
+  
+  .bg-dark-hover {
+    background-color: var(--bg-hover);
+  }
+  
+  .text-light-gray {
+    color: var(--text-light);
+  }
+  
+  .text-purple {
+    color: var(--text-purple);
+  }
+  
+  .text-green {
+    color: var(--text-green);
+  }
+  
+  .text-red {
+    color: var(--text-red);
+  }
+  
+  input:focus {
+    outline: none;
+    border: 1px solid var(--text-purple);
+  }
+  
+  button:hover {
+    cursor: pointer;
+  }
+  
