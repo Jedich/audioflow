@@ -14,6 +14,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+print(BASE_DIR)
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,6 +28,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ALLOWED_ORIGINS = [
+    "http://frontend:3000",  # From Docker
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+
+ALLOWED_HOSTS = ['localhost', 'backend']
 
 # Application definition
 

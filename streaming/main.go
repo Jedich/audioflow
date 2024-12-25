@@ -33,7 +33,7 @@ func (Song) TableName() string {
 
 func initDB() {
 	// Initialize SQLite connection
-	db, err = gorm.Open(sqlite.Open("../backend/db.sqlite3"), &gorm.Config{})
+	db, err = gorm.Open(sqlite.Open("/db.sqlite3"), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
@@ -55,7 +55,7 @@ func getSongFromDB(id int) (Song, error) {
 
 // Fetches the file from the URL
 func fetchFile(fileURL string) (*http.Response, error) {
-	fullURL := "http://localhost:8000/media/" + fileURL
+	fullURL := "http://backend:8000/media/" + fileURL
 	resp, err := http.Get(fullURL)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("file not found on the server")

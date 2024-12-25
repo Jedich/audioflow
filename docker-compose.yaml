@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  streaming:
+    build:
+      context: ./streaming
+      dockerfile: Dockerfile
+    ports:
+      - "8005:8005"
+    volumes:
+      - ./streaming:/app
+      - ./backend/db.sqlite3:/db.sqlite3
+    networks:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./backend/media/images:/app/media/images
+      - ./backend/media/songs:/app/media/songs
+      - ./backend/media/music:/app/media/music
+    depends_on:
+      - streaming
+    networks:
+      - backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    networks:
+      - backend
+
+networks:
+  backend:
