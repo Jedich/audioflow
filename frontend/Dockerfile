@@ -2,13 +2,14 @@ FROM node:18
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY . .
 
 RUN npm install
 
-RUN npm install react-h5-audio-player
+# Install Next.js alongside your other dependencies
+RUN npm install next
 
-COPY . .
+RUN npm install react-h5-audio-player
 
 EXPOSE 3000
 
