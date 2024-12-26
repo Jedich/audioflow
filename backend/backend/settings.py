@@ -133,7 +133,8 @@ STATIC_URL = "static/"
 
 MEDIA_ROOT = BASE_DIR / "media"
 
-MEDIA_URL = "/media/"
+MEDIA_URL = '/media/'  # The base URL for media files (will be accessible under /media in the URL)
+MEDIA_URL_FULL = "http://backend:8000" + MEDIA_URL
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

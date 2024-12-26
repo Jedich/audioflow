@@ -9,6 +9,7 @@ import Image from "next/image";
 export default function Home() {
   const [songs, setSongs] = useState([]);
   const [currentSong, setCurrentSong] = useState(null);
+  const [user, setUser] = useState(null);
   const [playlists, setPlaylists] = useState([{ id: 1, name: "Favorites", songs: [] }]);
   const [selectedPlaylist, setSelectedPlaylist] = useState(playlists[0]);
 
@@ -35,14 +36,15 @@ export default function Home() {
     <div className="flex flex-col h-screen bg-[#181a1f]">
       {/* Header */}
       <header className="flex justify-between items-center px-8 py-4 bg-[#1F2128] shadow-md">
-        <h1 className="text-2xl font-bold text-[#7C3AED]">AudioFlow</h1>
+        <Link href={`/`} className="text-2xl font-bold text-[#7C3AED]">
+          AudioFlow
+        </Link>
         <nav className="flex space-x-4">
-          <Link href={`/artistpage`} className="text-[#B0B0B0] hover:text-[#7C3AED]">
-            Artist Page
-          </Link>
+        {user ? (
           <Link href={`/userpage`} className="text-[#B0B0B0] hover:text-[#7C3AED]">
-            User Page
+            Profile
           </Link>
+        ):""}
         </nav>
         <button
           onClick={() => alert("Login functionality goes here!")}
@@ -55,8 +57,9 @@ export default function Home() {
       <div className="flex flex-1">
         {/* Sidebar */}
         <aside className="w-64 bg-[#1F2128] p-6 flex flex-col shadow-lg">
-          <h2 className="text-2xl font-bold text-[#7C3AED] mb-4">Your Library</h2>
+          <h2 className="text-2xl font-bold text-[#FFFFFF] mb-4">Your Library</h2>
           <ul className="flex-grow space-y-2">
+          <hr></hr>
           {playlists.map((playlist) => (
               <li
                 key={playlist.id}
@@ -73,6 +76,7 @@ export default function Home() {
             ))}
             <li className="text-[#B0B0B0] hover:text-[#7C3AED] cursor-pointer">Liked Songs</li>
             <li className="text-[#B0B0B0] hover:text-[#7C3AED] cursor-pointer">Recently Played</li>
+            <hr></hr>
             <li className="text-[#B0B0B0] hover:text-[#7C3AED] cursor-pointer">Summer Hits</li>
             <li className="text-[#B0B0B0] hover:text-[#7C3AED] cursor-pointer">Workout Mix</li>
             <li className="text-[#B0B0B0] hover:text-[#7C3AED] cursor-pointer">Chill Vibes</li>
@@ -88,12 +92,14 @@ export default function Home() {
         {/* Main Content */}
         <main className="flex-1 p-8 bg-[#181a1f]">
           <h2 className="text-4xl font-bold text-center text-[#7C3AED] my-8">Discover Songs</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {songs.map((song) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {songs.map((song) => { 
+              var thumbnail = song.thumbnail ? song.thumbnail : song.album && song.album.thumbnail ? song.album.thumbnail : song.artist && song.artist.thumbnail ? song.artist.thumbnail : "http://backend:8000/media/images/album/1.jpg"
+              return (
               <div key={song.id} className="bg-[#2e3b47] p-4 rounded-lg shadow-md transition-transform transform hover:scale-105">
                 <div className="relative w-full pb-[100%] mb-4 rounded-lg overflow-hidden">
                   <Image
-                    src={song.thumbnail}
+                    src={thumbnail}
                     alt={song.name}
                     layout="fill"
                     objectFit="cover"
@@ -120,7 +126,8 @@ export default function Home() {
                   Listen Now
                 </button>
               </div>
-            ))}
+            )
+          })}
           </div>
 
           {currentSong && (

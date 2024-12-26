@@ -186,8 +186,6 @@ nosetests.xml
 coverage.xml
 *.cover
 
-# Database
-*.sqlite3
 *.db
 
 # Flask
