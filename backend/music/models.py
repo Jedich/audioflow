@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
 from django.utils.timezone import now
 
 class BusinessUser(models.Model):
@@ -9,9 +10,19 @@ class BusinessUser(models.Model):
     
 class User(models.Model):
     username = models.CharField(max_length=100)
+    password_hash = models.CharField(max_length=255)
     email = models.CharField(max_length=300)
     avatar = models.ImageField(upload_to='images/avatars/')
     created_at = models.DateTimeField(default=now)
+    is_admin = models.BooleanField(default=False)
+
+    def clean(self):
+        super().clean()
+        # Custom email validation (could be customized further if needed)
+        try:
+            EmailValidator()(self.email)
+        except ValidationError:
+            raise ValidationError("Invalid email format.")
 
 class Album(models.Model):
     name = models.CharField(max_length=100)

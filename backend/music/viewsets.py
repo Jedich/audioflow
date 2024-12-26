@@ -1,4 +1,10 @@
 from rest_framework import viewsets, permissions
+from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
+from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ValidationError
+from rest_framework.decorators import api_view
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Song
@@ -46,3 +52,51 @@ class ArtistViewSet(viewsets.ModelViewSet):
             })
         except BusinessUser.DoesNotExist:
             return Response({"error": "Artist not found"}, status=404)
+        
+@api_view(['POST'])
+def login_user(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+    
+    if not email or not password:
+        return Response({"error": "Email and Password are required."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Try to find the user by email
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({"error": "Invalid email or password."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Authenticate user
+    user = authenticate(request, username=user.username, password=password)
+    
+    if user is not None:
+        login(request, user)  # Log in the user if authenticated
+        return JsonResponse({"message": "Login successful."}, status=status.HTTP_200_OK)
+    else:
+        return Response({"error": "Invalid email or password."}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def register_user(request):
+    username = request.data.get('username')
+    email = request.data.get('email')
+    password = request.data.get('password')
+    
+    if not username or not email or not password:
+        return Response({"error": "Username, Email and Password are required."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Check if user already exists
+    if User.objects.filter(username=username).exists():
+        return Response({"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
+    if User.objects.filter(email=email).exists():
+        return Response({"error": "Email already registered."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Create new user
+    user = User.objects.create(
+        username=username,
+        email=email,
+        password_hash=make_password(password)  # Hash the password before saving
+    )
+    
+    return JsonResponse({"message": "Registration successful!"}, status=status.HTTP_201_CREATED)

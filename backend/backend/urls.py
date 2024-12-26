@@ -19,7 +19,12 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from music.viewsets import login_user
+from music.viewsets import register_user
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(("routers", "core"), namespace="music-api")),
+    path('api/login/', login_user, name='login_user'),
+    path('api/register/', register_user, name='register_user'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

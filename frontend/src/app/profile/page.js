@@ -8,7 +8,7 @@ import Sidebar from "@/components/sidebar";
 
 const UserPage = () => {
   const [userData, setUserData] = useState(null);
-  const [user, setUser] = useState({ name: "John Doe", avatar: "/user-avatar.jpg" });
+  const [user, setUser] = useState({ name: "John Doe" });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -48,7 +48,7 @@ const UserPage = () => {
             {userData ? (
               <div className="flex items-center space-x-6">
                 <Image
-                  src={userData.avatar}
+                  src={userData.avatar ? userData.avatar : "http://backend:8000/media/images/album/1.jpg"}
                   alt={userData.name}
                   width={80}
                   height={80}
