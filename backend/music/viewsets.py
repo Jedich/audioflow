@@ -8,8 +8,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Song
-from .serializers import BusinessUserSerializer, SongSerializer, AlbumSerializer, UserSerializer
-from music.models import Song, BusinessUser, Album, User
+from .serializers import BusinessUserSerializer, SongSerializer, AlbumSerializer, UserSerializer, SongListenMetricSerializer
+from music.models import Song, BusinessUser, Album, User, SongListenMetric
 
 class SongViewSet(viewsets.ModelViewSet):
     queryset = Song.objects.all()
@@ -100,3 +100,27 @@ def register_user(request):
     )
     
     return JsonResponse({"message": "Registration successful!"}, status=status.HTTP_201_CREATED)
+
+class SongListenMetricViewSet(viewsets.ModelViewSet):
+    queryset = SongListenMetric.objects.all()
+    serializer_class = SongListenMetricSerializer
+
+    def perform_create(self, serializer):
+        artist_id = self.request.data.get('artist_id')
+        user_id = self.request.data.get('user_id')
+        song_id = self.request.data.get('song_id')
+
+        # Retrieve objects based on IDs
+        artist = BusinessUser.objects.get(pk=artist_id)
+        user = User.objects.get(pk=user_id)
+        song = Song.objects.get(pk=song_id)
+
+        # Assign objects to foreign key fields
+        serializer.save(artist=artist, user=user, song=song)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

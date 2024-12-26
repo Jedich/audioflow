@@ -46,3 +46,9 @@ class Song(models.Model):
     file = models.FileField(upload_to='music/')
     album = models.ForeignKey(Album, on_delete=models.CASCADE, null=True, blank=True, related_name='music_songs')
     release_date = models.DateField(default=now)
+
+class SongListenMetric(models.Model):
+    artist = models.ForeignKey(BusinessUser, on_delete=models.CASCADE, null=True, blank=True, related_name='music_songlistenmetric')
+    song = models.ForeignKey(Song, on_delete=models.CASCADE, null=True, blank=True, related_name='music_songlistenmetric')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='music_songlistenmetric')
+    timestamp = models.DateTimeField(default=now)

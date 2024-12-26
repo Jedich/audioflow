@@ -75,7 +75,7 @@ const ArtistPage = ({params}) => {
                   <p className="text-[#B0B0B0]">Rock • 10M monthly listeners</p>
                   <button className="mt-4 bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]">Play</button>
                   <button className="mt-4 ml-4 bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]">Follow</button>
-                  <a href="/dashboard" className="mt-4 ml-4 bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]">Dashboard</a>
+                  <a href={"/dashboard/"+params.id} className="mt-4 ml-4 bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]">Dashboard</a>
                 </div>
               </div>
             ) : (

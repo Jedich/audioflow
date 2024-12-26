@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Song, Album, BusinessUser, User
+from .models import Song, Album, BusinessUser, User, SongListenMetric
 
 class BusinessUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -88,3 +88,8 @@ class UserSerializer(serializers.ModelSerializer):
                 representation['avatar'] = f"http://backend:8000{representation['thumbnail']}"
 
         return representation
+    
+class SongListenMetricSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SongListenMetric
+        fields = '__all__' 
