@@ -2,29 +2,14 @@
 
 import React from "react";
 import Link from "next/link";
+import Header from "@/components/header";
+import Sidebar from "@/components/sidebar";
 import '../main.css'; // Стилі логіна
 
 export default function Login() {
   return (
     <div className="flex flex-col h-screen bg-[#181a1f]">
-      {/* Navbar */}
-      <header className="flex justify-between items-center px-8 py-4 bg-[#1F2128]">
-        <h1 className="text-2xl font-bold text-[#7C3AED]">AudioFlow</h1>
-        <nav className="space-x-4">
-          <Link href="/artistpage" className="text-[#B0B0B0] hover:text-[#7C3AED]">
-            Artist Page
-          </Link>
-          <Link href="/userpage" className="text-[#B0B0B0] hover:text-[#7C3AED]">
-            User Page
-          </Link>
-        </nav>
-        <button
-          onClick={() => alert("Login functionality goes here!")}
-          className="bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]"
-        >
-          Login
-        </button>
-      </header>
+      <Header user={null} />
 
       {/* Login Form */}
       <div className="flex items-center justify-center flex-grow">

@@ -1,2 +1,2 @@
 # AudioFlow
-A showcase of using Golang to build a scalable music streaming engine and display it on React.
+Проєкт на тему «Інформаційна система для пошуку, каталогізації та відтворення аудіофайлів» з дисципліни «Проектування і розроблення інформаційних систем та технологій»

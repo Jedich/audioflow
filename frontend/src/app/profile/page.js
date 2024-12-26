@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Header from "@/components/header";
+import Sidebar from "@/components/sidebar";
 
 const UserPage = () => {
   const [userData, setUserData] = useState(null);
@@ -37,51 +39,9 @@ const UserPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-[#181a1f]">
-      {/* Navbar */}
-      <header className="flex justify-between items-center px-8 py-4 bg-[#1F2128] shadow-md">
-        <h1 className="text-2xl font-bold text-[#7C3AED]">AudioFlow</h1>
-        <nav className="space-x-4">
-          <Link href="/" className="text-[#B0B0B0] hover:text-[#7C3AED]">
-            Home
-          </Link>
-          <Link href="/library" className="text-[#B0B0B0] hover:text-[#7C3AED]">
-            Library
-          </Link>
-          <Link href="/search" className="text-[#B0B0B0] hover:text-[#7C3AED]">
-            Search
-          </Link>
-        </nav>
-        <div className="flex items-center space-x-4">
-          <Image
-            src={user.avatar}
-            alt="Pic"
-            width={10}
-            height={10}
-            className="rounded-full"
-          />
-          <span className="text-white">{user.name}</span>
-          <button
-            onClick={handleLogout}
-            className="bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]"
-          >
-            Logout
-          </button>
-        </div>
-      </header>
-
+      <Header user={user} />
       <div className="flex flex-1">
-        {/* Sidebar */}
-        <aside className="w-64 bg-[#1F2128] p-6 flex flex-col shadow-lg">
-          <h2 className="text-2xl font-bold text-[#7C3AED] mb-4">Your Library</h2>
-          <ul className="space-y-2">
-            <li className="text-[#B0B0B0] hover:text-[#7C3AED] cursor-pointer">Liked Songs</li>
-            <li className="text-[#B0B0B0] hover:text-[#7C3AED] cursor-pointer">Recently Played</li>
-            <li className="text-[#B0B0B0] hover:text-[#7C3AED] cursor-pointer">Summer Hits</li>
-            <li className="text-[#B0B0B0] hover:text-[#7C3AED] cursor-pointer">Workout Mix</li>
-            <li className="text-[#B0B0B0] hover:text-[#7C3AED] cursor-pointer">Chill Vibes</li>
-          </ul>
-        </aside>
-
+        <Sidebar />
         {/* Main Content */}
         <main className="flex-1 p-8 bg-[#181a1f]">
           <section className="bg-[#1F2128] p-8 rounded-lg shadow-lg mb-8">

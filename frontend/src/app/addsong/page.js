@@ -5,29 +5,7 @@ import React from "react";
 const AddSongPage = () => {
   return (
     <div className="flex flex-col h-screen bg-[#181a1f]">
-      {/* Header */}
-      <header className="flex justify-between items-center px-8 py-4 bg-[#1F2128] shadow-md">
-        <h1 className="text-2xl font-bold text-[#7C3AED]">AudioFlow</h1>
-        <nav className="flex space-x-4">
-          <a href="/" className="text-[#B0B0B0] hover:text-[#7C3AED]">
-            Home
-          </a>
-          <a href="/library" className="text-[#B0B0B0] hover:text-[#7C3AED]">
-            Library
-          </a>
-          <a href="/search" className="text-[#B0B0B0] hover:text-[#7C3AED]">
-            Search
-          </a>
-        </nav>
-        <div className="flex items-center space-x-4">
-          <span className="text-white">John Doe</span>
-          <button
-            className="bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]"
-          >
-            Logout
-          </button>
-        </div>
-      </header>
+      <Header user={null} />
 
       {/* Content */}
       <main className="flex flex-1 justify-center items-center bg-[#181a1f]">
