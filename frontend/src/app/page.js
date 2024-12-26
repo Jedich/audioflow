@@ -103,7 +103,7 @@ export default function Home() {
 
           {currentSong && (
             <div className="fixed bottom-0 left-0 right-0 bg-[#1F2128] p-4 shadow-md">
-              <MusicPlayer url={currentSong.file} song_id={currentSong.id} artist_id={currentSong.artist.id} />
+              <MusicPlayer url={currentSong.file.replace('backend', 'localhost')} song_id={currentSong.id} artist_id={currentSong.artist.id} />
             </div>
           )}
         </main>
