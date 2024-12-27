@@ -8,8 +8,16 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Song
-from .serializers import BusinessUserSerializer, SongSerializer, AlbumSerializer, UserSerializer, SongListenMetricSerializer
-from music.models import Song, BusinessUser, Album, User, SongListenMetric
+from .serializers import BusinessUserSerializer, SongSerializer, AlbumSerializer, UserSerializer, SongListenMetricSerializer, PlaylistSerializer
+from music.models import Song, BusinessUser, Album, User, SongListenMetric, Playlist
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from django.http import HttpResponseForbidden
+from django.template.loader import render_to_string
+from django.urls import get_resolver
+import re
 
 class SongViewSet(viewsets.ModelViewSet):
     queryset = Song.objects.all()
@@ -57,22 +65,21 @@ class ArtistViewSet(viewsets.ModelViewSet):
 def login_user(request):
     email = request.data.get('email')
     password = request.data.get('password')
-    
+
     if not email or not password:
         return Response({"error": "Email and Password are required."}, status=status.HTTP_400_BAD_REQUEST)
-    
-    # Try to find the user by email
-    try:
-        user = User.objects.get(email=email)
-    except User.DoesNotExist:
-        return Response({"error": "Invalid email or password."}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     # Authenticate user
-    user = authenticate(request, username=user.username, password=password)
-    
+    user = authenticate(request, email=email, password=password)
     if user is not None:
-        login(request, user)  # Log in the user if authenticated
-        return JsonResponse({"message": "Login successful."}, status=status.HTTP_200_OK)
+        # Create JWT Token
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+
+        return JsonResponse(
+            {"message": "Login successful.", "access_token": access_token},
+            status=status.HTTP_200_OK
+        )
     else:
         return Response({"error": "Invalid email or password."}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -81,24 +88,18 @@ def register_user(request):
     username = request.data.get('username')
     email = request.data.get('email')
     password = request.data.get('password')
-    
+
     if not username or not email or not password:
-        return Response({"error": "Username, Email and Password are required."}, status=status.HTTP_400_BAD_REQUEST)
-    
-    # Check if user already exists
+        return Response({"error": "Username, Email, and Password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
     if User.objects.filter(username=username).exists():
         return Response({"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
 
     if User.objects.filter(email=email).exists():
         return Response({"error": "Email already registered."}, status=status.HTTP_400_BAD_REQUEST)
-    
-    # Create new user
-    user = User.objects.create(
-        username=username,
-        email=email,
-        password_hash=make_password(password)  # Hash the password before saving
-    )
-    
+
+    user = User.objects.create_user(username=username, email=email, password=password)
+
     return JsonResponse({"message": "Registration successful!"}, status=status.HTTP_201_CREATED)
 
 class SongListenMetricViewSet(viewsets.ModelViewSet):
@@ -124,3 +125,65 @@ class SongListenMetricViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_profile(request):
+    user = request.user  # This will give you the authenticated user
+    
+    # Get all playlists associated with the authenticated user
+    playlists = Playlist.objects.filter(user=user)
+    
+    # Serialize user and playlists
+    user_data = UserSerializer(user).data
+    playlists_data = PlaylistSerializer(playlists, many=True).data
+    
+    return Response({
+        'user': user_data,
+        'playlists': playlists_data
+    })
+
+def get_all_routes():
+    # Get the URL resolver
+    resolver = get_resolver()
+    
+    # List of all routes (URLs)
+    url_patterns = set()  # Use set to ensure uniqueness
+
+    # Function to recursively gather routes and avoid empty routes
+    def traverse(patterns):
+        for pattern in patterns:
+            # Skip empty or dynamic-only placeholders
+            route = str(pattern.pattern)
+            if route and route != '/':
+                url_patterns.add(route)  # Add to set (ensures uniqueness)
+            
+            # Check for nested patterns (subviews)
+            if hasattr(pattern, 'url_patterns'):
+                traverse(pattern.url_patterns)
+    
+    traverse(resolver.url_patterns)  # Call the recursive function
+    return list(url_patterns)  # Convert set back to list to return
+
+def clean_route(route):
+    # Remove special characters, leaving alphanumeric and slashes
+    return re.sub(r'[^a-zA-Z0-9/]', '', route)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def available_routes(request):
+    if not request.user.is_staff:
+        return HttpResponseForbidden('You do not have permission to view this page.')
+
+    # Get all routes using the recursive function
+    all_routes = get_all_routes()
+
+    # Clean up or format routes if needed (e.g., removing unnecessary placeholders)
+    cleaned_routes = [route.strip() for route in all_routes if route.strip()]  # Strip and remove extra empty elements
+    # Sort the routes based on their normalized version
+    sorted_routes = sorted(cleaned_routes, key=clean_route)
+
+    return Response({
+        'routes': sorted_routes
+    })

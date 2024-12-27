@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "corsheaders",
 
     "rest_framework",
+    "rest_framework_simplejwt",
     "music",
 ]
 
@@ -63,12 +64,28 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# Authentication backends and JWT settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
 ROOT_URLCONF = "backend.urls"
+
+STATIC_ROOT = BASE_DIR / 'templates'
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            BASE_DIR / 'templates'
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -142,3 +159,5 @@ MEDIA_URL_FULL = "http://backend:8000" + MEDIA_URL
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+AUTH_USER_MODEL = 'music.User'
