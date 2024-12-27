@@ -4,39 +4,78 @@ import React, { useEffect, useState } from "react";
 import Header from "@/components/header";
 import Sidebar from "@/components/sidebar";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useRouter } from "next/navigation";
 
 
-const ArtistDashboard = ({params}) => {
+const ArtistDashboard = () => {
+  const [artistData, setArtistData] = useState(null);
+  const [artistSongs, setArtistSongs] = useState([]);
+  const [user, setUser] = useState(null);
   const [metrics, setMetrics] = useState(null);
   const [topSong, setTopSong] = useState(null);
-  useEffect(() => {
-    const fetchMetrics = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/artist_stats/" + params.id);
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data);
-          setMetrics(data);
 
-          // Directly calculate the top song after fetching
-          if (data?.song_listens?.length > 0) {
-            const top = data.song_listens.reduce((prev, curr) =>
-              prev.total_listens > curr.total_listens ? prev : curr
-            );
-            setTopSong(top);
-            console.log(top)
-          }
+    const router = useRouter();
+
+    useEffect(() => {
+      const fetchArtistData = async () => {
+        let artistId;
+    
+        const cachedUserData = localStorage.getItem("user_data");
+    
+        if (cachedUserData) {
+          const parsedData = JSON.parse(cachedUserData);
+          const userFromCache = parsedData.user;
+          userFromCache.artist = parsedData.artist;
+          setArtistData(userFromCache.artist);
+          artistId = userFromCache.artist.id;
+          setUser(userFromCache);
         } else {
+          try {
+            const userDataResponse = await fetch("http://localhost:8000/api/user/", {
+              headers: {
+                Authorization: `Bearer ${data.access_token}`,
+              },
+            });
+    
+            if (userDataResponse.ok) {
+              const userData = await userDataResponse.json();
+              userData.artist = userData.artist; // Ensure artist is properly added
+              setArtistData(userData.artist);
+              artistId = userData.artist.id;
+              setUser(userData);
+            } else {
+              return router.push("/login");
+            }
+          } catch (error) {
+            return router.push("/login");
+          }
+        }
+    
+        if (!artistId) return; // Ensure artistId exists before proceeding
+    
+        try {
+          const response = await fetch("http://localhost:8080/artist_stats/" + artistId);
+          if (response.ok) {
+            const data = await response.json();
+            setMetrics(data);
+    
+            if (data?.song_listens?.length > 0) {
+              const top = data.song_listens.reduce((prev, curr) =>
+                prev.total_listens > curr.total_listens ? prev : curr
+              );
+              setTopSong(top);
+            }
+          } else {
+            setMetrics(null);
+          }
+        } catch (error) {
+          console.error("Error fetching metrics:", error);
           setMetrics(null);
         }
-      } catch (error) {
-        console.error("Error fetching metrics:", error);
-        setMetrics(null);
-      }
-    };
-
-    fetchMetrics();
-  }, [params.id]);
+      };
+    
+      fetchArtistData();
+    }, []); // Ensure dependencies for the useEffect are set properly
 
   return (
     <div className="flex flex-col h-screen bg-[#181a1f]">

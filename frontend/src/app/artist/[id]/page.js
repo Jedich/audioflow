@@ -9,7 +9,7 @@ import Image from "next/image";
 const ArtistPage = ({params}) => {
   const [artistData, setArtistData] = useState(null);
   const [artistSongs, setArtistSongs] = useState([]);
-  const [user, setUser] = useState({ name: "John Doe", avatar: "/user-avatar.jpg" });
+  const [user, setUser] = useState();
 
   useEffect(() => {
     // Imitating fetching artist data (replace with actual API request)
@@ -72,10 +72,12 @@ const ArtistPage = ({params}) => {
                 />
                 <div>
                   <h2 className="text-2xl font-bold text-white">{artistData.name}</h2>
+                  {(artistData.description ? (<p className="text-[#B0B0B0]">{artistData.description}</p>) : (""))}
                   <p className="text-[#B0B0B0]">Rock • 10M monthly listeners</p>
                   <button className="mt-4 bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]">Play</button>
                   <button className="mt-4 ml-4 bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]">Follow</button>
-                  <a href={"/dashboard/"+params.id} className="mt-4 ml-4 bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]">Dashboard</a>
+                  { user && user.is_artist && user.artist.id == artistData.id ?
+                  (<a href={`/dashboard/`} className="mt-4 ml-4 bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]">Dashboard</a>) : ("")}
                 </div>
               </div>
             ) : (

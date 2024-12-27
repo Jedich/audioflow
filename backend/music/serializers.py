@@ -14,7 +14,12 @@ class BusinessUserSerializer(serializers.ModelSerializer):
 
         # Modify the 'thumbnail' field to prepend the backend URL
         if representation.get('thumbnail'):
-            representation['thumbnail'] = representation['thumbnail'].replace("localhost", "backend")
+            # If 'thumbnail' contains 'localhost', replace it with 'backend'
+            if 'localhost' in representation['thumbnail']:
+                representation['thumbnail'] = representation['thumbnail'].replace('localhost', 'backend')
+            # If 'thumbnail' doesn't have a protocol, prepend 'http://backend:8000'
+            elif not representation['thumbnail'].startswith('http'):
+                representation['thumbnail'] = f"http://backend:8000{representation['thumbnail']}"
 
         return representation
     

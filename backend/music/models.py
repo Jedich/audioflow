@@ -4,10 +4,7 @@ from django.core.validators import EmailValidator
 from django.utils.timezone import now
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-class BusinessUser(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.CharField(max_length=300)
-    thumbnail = models.ImageField(upload_to='images/')
+
     
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
@@ -34,6 +31,7 @@ class User(AbstractBaseUser):
     avatar = models.ImageField(upload_to='images/avatars/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_staff = models.BooleanField(default=False)
+    is_artist = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -52,6 +50,12 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_staff  # You can adjust this to your permission logic
     
+class BusinessUser(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=300)
+    thumbnail = models.ImageField(upload_to='images/')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')  # the user who owns the playlist
+
 class Album(models.Model):
     name = models.CharField(max_length=100)
     artist = models.ForeignKey(BusinessUser, on_delete=models.CASCADE, null=True, blank=True, related_name='music_albums')

@@ -138,9 +138,18 @@ def user_profile(request):
     user_data = UserSerializer(user).data
     playlists_data = PlaylistSerializer(playlists, many=True).data
     
+    artist_data = None
+    try:
+        artist = BusinessUser.objects.get(user=user)
+        artist_data = BusinessUserSerializer(artist).data
+    except BusinessUser.DoesNotExist:
+        # If the user is not an artist, artist_data remains None
+        artist_data = None
+
     return Response({
         'user': user_data,
-        'playlists': playlists_data
+        'playlists': playlists_data,
+        'artist': artist_data  # Add artist data if present
     })
 
 def get_all_routes():

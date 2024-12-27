@@ -5,28 +5,23 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/header";
 import Sidebar from "@/components/sidebar";
+import { useRouter } from "next/navigation";
 
 const UserPage = () => {
-  const [userData, setUserData] = useState(null);
-  const [user, setUser] = useState({ name: "John Doe" });
-
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+  
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("/api/user");
-        if (response.ok) {
-          const data = await response.json();
-          setUserData(data);
-        } else {
-          setUserData(null);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        setUserData(null);
+    const cachedUserData = localStorage.getItem("user_data");
+    if (cachedUserData) {
+      setUser(JSON.parse(cachedUserData).user);  // Set user from cached data
+      if(JSON.parse(cachedUserData).user.is_artist) {
+        router.push("/artist");
       }
-    };
-
-    fetchUserData();
+    } else {
+      // Redirect to login page if no user data found
+      router.push("/login");
+    }
   }, []);
 
   const handleLogout = () => {
@@ -45,27 +40,23 @@ const UserPage = () => {
         {/* Main Content */}
         <main className="flex-1 p-8 bg-[#181a1f]">
           <section className="bg-[#1F2128] p-8 rounded-lg shadow-lg mb-8">
-            {userData ? (
+            {user ? (
               <div className="flex items-center space-x-6">
                 <Image
-                  src={userData.avatar ? userData.avatar : "http://backend:8000/media/images/album/1.jpg"}
-                  alt={userData.name}
+                  src={user.avatar ? user.avatar : "http://backend:8000/media/images/avatar_default.jpg"}
+                  alt={user.username}
                   width={80}
                   height={80}
                   className="rounded-full"
                 />
                 <div>
-                  <h2 className="text-2xl font-bold text-white">{userData.name}</h2>
-                  <p className="text-[#B0B0B0]">{userData.bio || "No bio available"}</p>
-                  <p className="text-[#B0B0B0]">Location: {userData.location || "Unknown"}</p>
-                  <p className="text-[#B0B0B0]">Followers: {userData.followers || 0}</p>
-                  <p className="text-[#B0B0B0]">Following: {userData.following || 0}</p>
-                  <button
-                    onClick={handleEditProfile}
-                    className="mt-4 bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]"
-                  >
-                    Edit Profile
-                  </button>
+                  <h2 className="text-2xl font-bold text-white">{user.username}</h2>
+                  <p className="text-[#B0B0B0]">{user.bio || "No bio available"}</p>
+                  <p className="text-[#B0B0B0]">Location: {user.location || "Unknown"}</p>
+                  <p className="text-[#B0B0B0]">Followers: {user.followers || 0}</p>
+                  <p className="text-[#B0B0B0]">Following: {user.following || 0}</p>
+                  { user && user.is_staff ?
+                  (<a href={`http://localhost:8000/admin/`} className=" rounded hover:bg-[#9F7AEA]">Admin Page</a>) : ("")}
                 </div>
               </div>
             ) : (
@@ -86,8 +77,8 @@ const UserPage = () => {
           <section>
             <h3 className="text-2xl font-bold text-white mb-4">Your Playlists</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {userData && userData.playlists && userData.playlists.length > 0 ? (
-                userData.playlists.map((playlist, index) => (
+              {user && user.playlists && user.playlists.length > 0 ? (
+                user.playlists.map((playlist, index) => (
                   <div
                     key={index}
                     className="bg-[#2e3b47] p-4 rounded-lg shadow-md hover:shadow-lg transition"
@@ -114,8 +105,8 @@ const UserPage = () => {
           <section className="mt-8">
             <h3 className="text-2xl font-bold text-white mb-4">Your Favorite Tracks</h3>
             <div className="space-y-4">
-              {userData && userData.favoriteTracks && userData.favoriteTracks.length > 0 ? (
-                userData.favoriteTracks.map((track, index) => (
+              {user && user.favoriteTracks && user.favoriteTracks.length > 0 ? (
+                user.favoriteTracks.map((track, index) => (
                   <div
                     key={index}
                     className="flex justify-between items-center bg-[#2e3b47] p-4 rounded-lg shadow-md hover:shadow-lg transition"
