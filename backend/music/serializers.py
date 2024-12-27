@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from .models import Song, Album, BusinessUser, User, SongListenMetric, Playlist
+from datetime import date
 
 class BusinessUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = BusinessUser
-        fields = ['id', 'name', 'description', 'thumbnail']
+        fields = ['id', 'name', 'description', 'thumbnail', 'user']
+        read_only_fields = ['user']  # Поле user не редагується через API
     
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -44,14 +46,16 @@ class AlbumSerializer(serializers.ModelSerializer):
 
         return representation
 
+
 class SongSerializer(serializers.ModelSerializer):
-    album = AlbumSerializer()
-    artist = BusinessUserSerializer()
+    album = serializers.PrimaryKeyRelatedField(queryset=Album.objects.all(), required=False)  # Accept album_id
+    artist = serializers.PrimaryKeyRelatedField(queryset=BusinessUser.objects.all())  # Accept artist_id
+    release_date = serializers.DateField(default=date.today)
 
     class Meta:
         model = Song
         fields = ['id', 'name', 'artist', 'duration', 'thumbnail', 'file', 'album', 'release_date']
-        
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
@@ -74,7 +78,8 @@ class SongSerializer(serializers.ModelSerializer):
                 representation['file'] = f"http://backend:8000{representation['file']}"
 
         return representation
-    
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

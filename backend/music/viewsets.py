@@ -24,6 +24,35 @@ class SongViewSet(viewsets.ModelViewSet):
     serializer_class = SongSerializer
     permission_classes = [permissions.AllowAny]
 
+    def perform_create(self, serializer):
+        # Retrieve necessary data from the request (e.g., artist_id and album_id)
+        artist_id = self.request.data.get('artist_id')
+        album_id = self.request.data.get('album_id')
+
+        # Ensure the artist exists (check for validity)
+        try:
+            artist = BusinessUser.objects.get(id=artist_id)
+        except BusinessUser.DoesNotExist:
+            return Response({"error": "Artist not found."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # If album_id is provided, ensure the album exists
+        album = None
+        if album_id:
+            try:
+                album = Album.objects.get(id=album_id)
+            except Album.DoesNotExist:
+                return Response({"error": "Album not found."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Save the song with the artist and album (if provided)
+        serializer.save(artist=artist, album=album)
+
+    def create(self, request, *args, **kwargs):
+        # Call the default `create` method, but pass in the modified `perform_create` logic
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)  # Custom logic for creating the song with artist and album
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -39,6 +68,16 @@ class ArtistViewSet(viewsets.ModelViewSet):
     serializer_class = BusinessUserSerializer
     permission_classes = [permissions.AllowAny]
 
+    def perform_create(self, serializer):
+        user_id = self.request.data.get('user_id')
+        try:
+            user = User.objects.get(id=user_id)
+            
+        except User.DoesNotExist:
+            raise ValidationError({"user_id": "User with the given ID does not exist."})
+        serializer.save(user=user)
+
+    
     @action(detail=True, methods=['get'])
     def songs(self, request, pk=None):
         """
@@ -60,7 +99,8 @@ class ArtistViewSet(viewsets.ModelViewSet):
             })
         except BusinessUser.DoesNotExist:
             return Response({"error": "Artist not found"}, status=404)
-        
+
+ 
 @api_view(['POST'])
 def login_user(request):
     email = request.data.get('email')
@@ -82,7 +122,7 @@ def login_user(request):
         )
     else:
         return Response({"error": "Invalid email or password."}, status=status.HTTP_400_BAD_REQUEST)
-    
+
 @api_view(['POST'])
 def register_user(request):
     username = request.data.get('username')

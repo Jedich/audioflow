@@ -33,6 +33,8 @@ const Header = () => {
       <div className="flex items-center space-x-4">
         {user ? (
           <>
+            {!user.is_artist && <Link href="/create_artist" className="bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]">            Create artist</Link>}
+            {user.is_artist && <Link href="/addsong" className="bg-[#7C3AED] text-white py-2 px-4 rounded hover:bg-[#9F7AEA]">Add song</Link>}
             <Image
               src={user.thumbnail || "http://backend:8000/media/images/avatar_default.jpg"}
               alt="Pic"
